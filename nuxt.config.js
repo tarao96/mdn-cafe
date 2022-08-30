@@ -4,14 +4,16 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'mdn-cafe',
+    titleTemplate(title) {
+      return (title ? `${title} | ` : '') + process.env.npm_package_name
+    },
     htmlAttrs: {
       lang: 'en',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
@@ -21,7 +23,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/filter.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -48,4 +50,22 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  generate: {
+    fallback: true,
+  },
+
+  // .envファイルから必要な環境変数を定義
+  API_KEY: process.env,
+  API_URL: process.env,
+
+  // フロントエンドで利用する環境変数
+  publicRuntimeConfig: {
+    apiUrl: process.env.API_URL
+  },
+
+  // サーバサイドで利用する環境変数
+  privateRuntimeConfig: {
+    apiKey: process.env.API_KEY
+  }
 }
